@@ -30,7 +30,11 @@ func (e *Error) IsPresent() bool {
 }
 
 // WithCtx assigns all given context strings to the Error
+// An empty Error will not be assigned any context
 func (e *Error) WithCtx(ctx ...string) *Error {
+	if !e.IsPresent() {
+		return e
+	}
 	e.ctx = append(e.ctx, ctx...)
 	return e
 }
@@ -56,26 +60,30 @@ func (e *Error) IsFatal() bool {
 	return e.fatal
 }
 
-// Error returns a std error
+// Error returns a std error, nil if the Error is empty
 func (e *Error) Error() error {
 	return e.err
 }
 
 // Message returns the Error message string
+// An empty Error returns an empty string
 func (e *Error) Message() string {
+	if !e.IsPresent() {
+		return ""
+	}
 	return e.err.Error()
 }
 
 // String returns the Error message string representation
+// An empty Error returns an empty err tag
 func (e *Error) String() string {
+	if !e.IsPresent() {
+		return "[empty err]"
+	}
 	return fmt.Sprintf("%s %v", e.err, e.ctx)
 }
 
 // Print prints out the Error
 func (e *Error) Print() {
-	if !e.IsPresent() {
-		fmt.Println("[empty]")
-		return
-	}
 	fmt.Println(e)
 }
