@@ -74,6 +74,28 @@ func (e *Error) Message() string {
 	return e.err.Error()
 }
 
+// Dispatchable is any func which returns the Error
+type Dispatchable func(...interface{}) *Error
+
+// IfAbsent will dispatch a func if the Error is NOT present and return the resulting Error of the dispatchable
+// otherwise, it will return itself and will not dispatch a given func
+func (e *Error) IfAbsent(d Dispatchable, args ...interface{}) *Error {
+	if e.IsPresent() {
+		return e
+	}
+	return d(args)
+}
+
+// OrElse will dispatch a func if the Error is present and return the resulting Error of the dispatchable
+// // otherwise, it will return itself and will not dispatch a given func
+// *OrElse is a polar opposite of IfAbsent*
+func (e *Error) OrElse(d Dispatchable, args ...interface{}) *Error {
+	if e.IsPresent() {
+		return d(args)
+	}
+	return e
+}
+
 // String returns the Error message string representation
 // An empty Error returns an empty err tag
 func (e *Error) String() string {
