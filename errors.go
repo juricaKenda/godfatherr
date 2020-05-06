@@ -88,6 +88,7 @@ func (e *Error) IfPresent(consumerr Consumerr) {
 	}
 }
 
+// IfAbsent executes a given Producer func if error is absent
 func (e *Error) IfAbsent(producerr Producerr) *Error {
 	if !e.IsPresent() {
 		return producerr()
