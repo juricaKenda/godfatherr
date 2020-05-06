@@ -96,6 +96,17 @@ func (e *Error) IfAbsent(producerr Producerr) *Error {
 	return e
 }
 
+// WhileAbsent executes each Producer func until it encounters the Error
+// If the Error is not encountered, it will finish when it iterates through all Producers
+func WhileAbsent(prod ...Producerr) *Error {
+	for _, p := range prod {
+		if err := p(); err.IsPresent() {
+			return err
+		}
+	}
+	return Empty()
+}
+
 // String returns the Error message string representation
 // An empty Error returns an empty err tag
 func (e *Error) String() string {
