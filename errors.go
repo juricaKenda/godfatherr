@@ -24,6 +24,12 @@ func Empty() *Error {
 	return &Error{}
 }
 
+// Consumerr is any func which consumes the Error
+type Consumerr func(err *Error)
+
+// Producerr is any func which produces the Error
+type Producerr func() *Error
+
 // IsPresent returns true if the error is present, false otherwise
 func (e *Error) IsPresent() bool {
 	return e.err != nil
@@ -74,24 +80,17 @@ func (e *Error) Message() string {
 	return e.err.Error()
 }
 
-// Dispatchable is any func which returns the Error
-type Dispatchable func(...interface{}) *Error
-
-// IfAbsent will dispatch a func if the Error is NOT present and return the resulting Error of the dispatchable
-// otherwise, it will return itself and will not dispatch a given func
-func (e *Error) IfAbsent(d Dispatchable, args ...interface{}) *Error {
+// IfPresent will dispatch a consumer func
+// otherwise, it will do nothing
+func (e *Error) IfPresent(consumerr Consumerr) {
 	if e.IsPresent() {
-		return e
+		consumerr(e)
 	}
-	return d(args)
 }
 
-// OrElse will dispatch a func if the Error is present and return the resulting Error of the dispatchable
-// // otherwise, it will return itself and will not dispatch a given func
-// *OrElse is a polar opposite of IfAbsent*
-func (e *Error) OrElse(d Dispatchable, args ...interface{}) *Error {
-	if e.IsPresent() {
-		return d(args)
+func (e *Error) IfAbsent(producerr Producerr) *Error {
+	if !e.IsPresent() {
+		return producerr()
 	}
 	return e
 }
