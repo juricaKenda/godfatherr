@@ -140,6 +140,15 @@ func (e *Error) isCompliant() bool {
 	return e.ContainsCtx(COMPLIANT)
 }
 
+func (e *Error) decomply() *Error {
+	for i, other := range e.ctx {
+		if other == COMPLIANT {
+			e.ctx = append(e.ctx[:i], e.ctx[i+1:]...)
+		}
+	}
+	return e
+}
+
 //WatchDog enables the early exit principle scope by watching the compliant Errors
 func WatchDog(f func()) (e *Error) {
 	defer func() {
@@ -148,7 +157,7 @@ func WatchDog(f func()) (e *Error) {
 			case *Error:
 				err := r.(*Error)
 				if err.isCompliant() {
-					e = err
+					e = err.decomply()
 				} else {
 					panic(err)
 				}
