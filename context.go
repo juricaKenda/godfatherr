@@ -5,4 +5,6 @@ const (
 	KAFKA        = "kafka"
 	MONGO        = "mongo"
 	SQL          = "sql"
+
+	COMPLIANT = "godfatherr-watchdog-compliant"
 )
