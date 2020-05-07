@@ -46,7 +46,7 @@ func (e *Error) WithCtx(ctx ...string) *Error {
 }
 
 // ContainsCtx returns true if the Error contains a given ctx value, false otherwise
-func (e *Error) ContaincCtx(ctx string) bool {
+func (e *Error) ContainsCtx(ctx string) bool {
 	for _, element := range e.ctx {
 		if element == ctx {
 			return true
@@ -64,6 +64,10 @@ func (e *Error) Fatal() *Error {
 // IsFatal returns true if the Error is fatal, false otherwise
 func (e *Error) IsFatal() bool {
 	return e.fatal
+}
+
+func (e *Error) Is(other *Error) bool {
+	return false
 }
 
 // Error returns a std error, nil if the Error is empty
@@ -119,4 +123,40 @@ func (e *Error) String() string {
 // Print prints out the Error
 func (e *Error) Print() {
 	fmt.Println(e)
+}
+
+//Panic delegation
+func (e *Error) Panic() {
+	panic(e)
+}
+
+//Comply with the Watchdog
+func (e *Error) Comply() {
+	e.WithCtx(COMPLIANT)
+	e.Panic()
+}
+
+func (e *Error) isCompliant() bool {
+	return e.ContainsCtx(COMPLIANT)
+}
+
+//WatchDog enables the early exit principle scope by watching the compliant Errors
+func WatchDog(f func()) (e *Error) {
+	defer func() {
+		if r := recover(); r != nil {
+			switch r.(type) {
+			case *Error:
+				err := r.(*Error)
+				if err.isCompliant() {
+					e = err
+				} else {
+					panic(err)
+				}
+			default:
+				panic(r)
+			}
+		}
+	}()
+	f()
+	return Empty()
 }
