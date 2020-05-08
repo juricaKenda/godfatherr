@@ -130,19 +130,19 @@ func (e *Error) Panic() {
 	panic(e)
 }
 
-//Comply with the Watchdog
-func (e *Error) Comply() {
-	e.WithCtx(COMPLIANT)
+//Watch with the Watchdog
+func (e *Error) Watch() {
+	e.WithCtx(WATCHED)
 	e.Panic()
 }
 
 func (e *Error) isCompliant() bool {
-	return e.ContainsCtx(COMPLIANT)
+	return e.ContainsCtx(WATCHED)
 }
 
-func (e *Error) decomply() *Error {
+func (e *Error) unwatch() *Error {
 	for i, other := range e.ctx {
-		if other == COMPLIANT {
+		if other == WATCHED {
 			e.ctx = append(e.ctx[:i], e.ctx[i+1:]...)
 		}
 	}
@@ -157,7 +157,7 @@ func WatchDog(f func()) (e *Error) {
 			case *Error:
 				err := r.(*Error)
 				if err.isCompliant() {
-					e = err.decomply()
+					e = err.unwatch()
 				} else {
 					panic(err)
 				}
