@@ -136,7 +136,7 @@ func (e *Error) Watch() {
 	e.Panic()
 }
 
-func (e *Error) isCompliant() bool {
+func (e *Error) isWatched() bool {
 	return e.ContainsCtx(WATCHED)
 }
 
@@ -156,7 +156,7 @@ func WatchDog(f func()) (e *Error) {
 			switch r.(type) {
 			case *Error:
 				err := r.(*Error)
-				if err.isCompliant() {
+				if err.isWatched() {
 					e = err.unwatch()
 				} else {
 					panic(err)
