@@ -5,6 +5,4 @@ const (
 	KAFKA        = "kafka"
 	MONGO        = "mongo"
 	SQL          = "sql"
-
-	WATCHED = "godfatherr-watchdog-watched"
 )
