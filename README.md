@@ -10,7 +10,7 @@
     }
 ### Assign additional context
     err := someFunc()
-    if err.IsPresent() && err.ContainsCtx("redis"){
+    if err.IsPresent() && err.ContainsCtx(godfatherr.REDIS){
           ...
     }
 ### Assign fatality concept
@@ -21,7 +21,7 @@
 
 ### Perform std operations directly
     err := someFunc()
-    if err.IsPresent() && err.ContainsCtx("redis"){
+    if err.IsPresent() && err.ContainsCtx(domain.FOO){
           err.Print()
           return err.Error()
     }
