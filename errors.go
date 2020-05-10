@@ -127,6 +127,9 @@ func (e *Error) Print() {
 
 //Panic delegation
 func (e *Error) Panic() {
+	if !e.IsPresent() {
+		return
+	}
 	panic(e)
 }
 
