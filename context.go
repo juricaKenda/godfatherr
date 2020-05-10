@@ -6,5 +6,5 @@ const (
 	MONGO        = "mongo"
 	SQL          = "sql"
 
-	COMPLIANT = "godfatherr-watchdog-compliant"
+	WATCHED = "godfatherr-watchdog-watched"
 )
