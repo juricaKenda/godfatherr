@@ -34,8 +34,8 @@
 
 ## Philosophy and purpose 
 The Godfatherr library embodies the fluency and simplicity. The "go" approach to errors is extremely 
-appealing because of the simplicity it introduces (ie. errors are defined exlusively by their error messages).
-However, in my (@juricaKenda) opinnion, this approach lacks context. When I visualize software constructs, 
+appealing because of the simplicity it introduces (ie. errors are defined exclusively by their error messages).
+However, in my (@juricaKenda) opinion, this approach lacks context. When I visualize software constructs, 
 I see engines and services on different abstraction and contextual levels. A "raw", string only, error can 
 never express where it came from. The context of it stayed at the level it was produced at. 
  
