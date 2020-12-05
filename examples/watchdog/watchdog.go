@@ -5,6 +5,12 @@ import (
 	"github.com/juricaKenda/godfatherr"
 )
 
+// Alternative for:
+// a, err := funcA()
+// if err != nil {..}
+// c, err := funcB(a)
+// if err != nil {..}
+// fmt.Println(c)
 func main() {
 	// exit early with the first watched err
 	err := godfatherr.WatchDog(func() {
